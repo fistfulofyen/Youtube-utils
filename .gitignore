@@ -1,10 +1,8 @@
 # OAuth and API secrets
-client_secret.json
-token.pickle
+config/client_secret.json
+config/token.pickle
+config/config.json
 *.env
-config.json
-
 
 # Python cache files
 __pycache__/
-

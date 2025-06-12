@@ -1,9 +1,9 @@
 from googleapiclient.discovery import build
 import json
 import re
-from util import *
+from src.util import *
 
-with open('config.json', 'r') as file:
+with open('config/config.json', 'r') as file:
     config = json.load(file)
 
 PLAY_LIST = "Pandas Tutorials"

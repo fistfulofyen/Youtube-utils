@@ -5,14 +5,14 @@ import pickle
 import json
 import re
 import os
-from util import *
+from src.util import *
 
 credentials = None
 
 # token.pickle stores the user's credentials from previously successful logins
-if os.path.exists('token.pickle'):
+if os.path.exists('config/token.pickle'):
     print('Loading Credentials From File...')
-    with open('token.pickle', 'rb') as token:
+    with open('config/token.pickle', 'rb') as token:
         credentials = pickle.load(token)
 
 # If there are no valid credentials available, then either refresh the token or log in.
@@ -23,7 +23,7 @@ if not credentials or not credentials.valid:
     else:
         print('Fetching New Tokens...')
         flow = InstalledAppFlow.from_client_secrets_file(
-            'client_secrets.json',
+            'config/client_secret.json',
             scopes=[
                 'https://www.googleapis.com/auth/youtube.readonly'
             ]
@@ -40,10 +40,5 @@ if not credentials or not credentials.valid:
 
 with build('youtube', 'v3', credentials=credentials) as service:
 
-
-    request = service.playlistItems().list(
-        part='status',
-        playlistId='UUCezIgC97PvUuR4_gbFUs5g'
-    )
-    response = request.execute()
-    print_json(response)
+    video_id = get_video_ids(service, 'LL', max_results=10, display=False)
+    video_titles = get_video_title(service, video_id, display=True)

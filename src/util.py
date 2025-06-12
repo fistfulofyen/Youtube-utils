@@ -147,3 +147,34 @@ def get_most_popular_video(service, user_name: str, playlist_name: str, max_resu
         print(f"link to most popular video ID: https://www.youtube.com/watch?v={most_popular_video['id']}")
     
     return most_popular_video['id']
+
+def get_video_title(service, video_id: list, display=False) -> str:
+    '''
+    Get the title of a video given its ID.
+    Returns the title as a string.
+    '''
+    
+    ids_str = ','.join(video_id) if isinstance(video_id, list) else video_id
+    if not ids_str:
+        raise ValueError("Video ID cannot be empty.")
+    
+    titles = []
+
+    for i in range(0, len(video_id), 50):
+        batch_ids = video_id[i:i + 50]
+        ids_str = ','.join(batch_ids)
+
+        request = service.videos().list(
+            part='snippet',
+            id=ids_str
+        )
+        response = request.execute()
+
+        for item in response.get('items', []):
+            titles.append(item['snippet']['title'])
+
+        if display:
+            for vid_id, title in zip(batch_ids, titles[-len(batch_ids):]):
+                print(f"  Title: {title}, video link: https://www.youtube.com/watch?v={vid_id}")
+
+    return titles
